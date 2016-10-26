@@ -43,36 +43,26 @@ public class MainActivity extends AppCompatActivity {
     private LinkedList<LocationEntity> locationList = new LinkedList<LocationEntity>();
     private Button btn_friend;
     private Button btn_refresh;
-    public List<ListViewItem> mlist = new ArrayList<ListViewItem>();
+
     private SMSBroadcastReceiver mSMSBroadcastReceiver;
     private String[] array;
     private ImageView sweep;
     private OrderDao orderdao;
+    private List<Order> orderList;
+    private double mLatitude;
+    private double mLontitude;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
+
+        orderList = new ArrayList<>();
+        orderdao = new OrderDao(this);
+        orderList = orderdao.getAllDate();
         mSMSBroadcastReceiver=new SMSBroadcastReceiver();
-        mSMSBroadcastReceiver.setOnReceivedMessageListener(new SMSBroadcastReceiver.MessageListener() {
-            @Override
-            public void OnReceived(String message) {
-                if("Where are you".equals(message)) {
-                    String phone_num = "15820577562";
-                    String context = "22.25/113.54";
-                    SmsManager manager = SmsManager.getDefault();
-                    ArrayList<String> list = manager.divideMessage(context);  //因为一条短信有字数限制，因此要将长短信拆分
-                    for (String text : list) {
-                        manager.sendTextMessage(phone_num, null, text, null, null);
-                    }
-                }else if(message.indexOf("/")!=-1){
-                    //分割经纬度
-                    array = message.split("/");
-                    setFlag(array);
-                }
-            }
-        });
+
         mMapView = (MapView) findViewById(R.id.main_bmapView);
         mBaiduMap = mMapView.getMap();
         mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
@@ -85,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         mOption.setCoorType("bd09ll");
 
         LocationClient mClient = new LocationClient(this);
+
         mClient.setLocOption(mOption);
         mClient.registerLocationListener(listener);
         mClient.start();
@@ -109,14 +100,42 @@ public class MainActivity extends AppCompatActivity {
                 if(anim!=null){
                     sweep.startAnimation(anim);
                 }
-                String phone_num = "15820577562";
-                String context = "Where are you";
-                SmsManager manager = SmsManager.getDefault();
-                ArrayList<String> list = manager.divideMessage(context);  //因为一条短信有字数限制，因此要将长短信拆分
-                for(String text:list){
-                    manager.sendTextMessage(phone_num, null, text, null, null);
+                if(orderList.size()>0){
+                    for(int i=0;i<orderList.size();++i){
+                        String phone_num =  orderList.get(i).num;
+                        String context = "Where are you";
+                        SmsManager manager = SmsManager.getDefault();
+                        ArrayList<String> list = manager.divideMessage(context);  //因为一条短信有字数限制，因此要将长短信拆分
+                        for(String text:list){
+                            manager.sendTextMessage(phone_num, null, text, null, null);
+                        }
+                    }
                 }
-                Toast.makeText(getApplicationContext(), "发送完毕", Toast.LENGTH_SHORT).show();
+                sweep.clearAnimation();
+            }
+        });
+        mSMSBroadcastReceiver.setOnReceivedMessageListener(new SMSBroadcastReceiver.MessageListener() {
+            @Override
+            public void OnReceived(String message,String sender) {
+
+
+                if("Where are you".equals(message)) {
+                    if(mLatitude!=0&&mLontitude!=0){
+                        String phone_num = sender;
+                        String context = mLatitude+"/"+mLontitude;
+                        SmsManager manager = SmsManager.getDefault();
+                        ArrayList<String> list = manager.divideMessage(context);  //因为一条短信有字数限制，因此要将长短信拆分
+                        for (String text : list) {
+                            manager.sendTextMessage(phone_num, null, text, null, null);
+                        }
+                    }
+
+                }else if(message.indexOf("/")!=-1){
+                    //分割经纬度
+                    array = message.split("/");
+                    setFlag(array);
+
+                }
             }
         });
     }
@@ -135,7 +154,8 @@ public class MainActivity extends AppCompatActivity {
                     locData.putParcelable("loc", location);
                     locMsg.setData(locData);
                     locHander.sendMessage(locMsg);
-
+                    mLatitude= location.getLatitude();
+                    mLontitude = location.getLongitude();
                 }
             }
         }
@@ -148,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
             longitude = Double.parseDouble(array[1]);
             LatLng flag = new LatLng(latitude, longitude);
             BitmapDescriptor bitmap = null;
-            bitmap = BitmapDescriptorFactory.fromResource(R.drawable.huaji);
+            bitmap = BitmapDescriptorFactory.fromResource(R.drawable.friend_marker);
             // 构建MarkerOption，用于在地图上添加Marker
             OverlayOptions option = new MarkerOptions().position(flag).icon(bitmap);
             // 在地图上添加Marker，并显示

@@ -12,5 +12,6 @@
         android:layout_width="wrap_content"
         android:id="@+id/dlog_add_edit"
         android:minWidth="100dip"
+        android:inputType="phone"
         />
 </LinearLayout>

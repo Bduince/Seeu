@@ -1,7 +1,14 @@
 package com.eb.seeu;
 
-/**
- * Created by PC on 2016/10/26.
- */
-public class ActivityInfo {
+
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+
+public class ActivityInfo extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
 }

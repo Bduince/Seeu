@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
+    android:background="@drawable/friends_list_item_background"
+    android:paddingTop="10dp" android:paddingRight="10dp"
+    android:paddingLeft="40dp"
     android:layout_height="match_parent">
 
     <ImageView
@@ -11,8 +14,11 @@
     <TextView
         android:id="@+id/friend_name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <ImageView
+        android:layout_height="wrap_content"
+        android:textColor="#39b54a" android:paddingTop="3dp" android:paddingLeft="10dp"
+        android:textSize="18dp" android:layout_gravity="center_vertical"/>
+    <ImageButton
+        android:gravity="right"
         android:id="@+id/friend_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>

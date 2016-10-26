@@ -68,7 +68,7 @@ public class OrderListAdapter extends BaseAdapter {
 
     @Override
     public boolean isEnabled(int position) {
-        return false;
+        return true;
     }
 
     public static class ViewHolder{

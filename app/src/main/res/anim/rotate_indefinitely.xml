@@ -7,5 +7,5 @@
     android:pivotX="100%"
     android:pivotY="100%"
     android:repeatCount="infinite"
-    android:duration="30000" />
+    android:duration="3000" />
 </set>

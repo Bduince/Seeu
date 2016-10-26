@@ -1,8 +1,6 @@
 package com.eb.seeu;
 
-import android.app.Dialog;
-import android.content.ClipData;
-import android.content.Context;
+
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -14,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -43,6 +42,7 @@ public class ActivityFriend extends AppCompatActivity {
         lv_friend = (ListView)findViewById(R.id.friend_listview);
         TextView frd_epty = (TextView)findViewById(R.id.friend_empty);
         d_adapter = new DeleteAdapter(ActivityFriend.this, orderList);
+
         if(orderList == null) {
             frd_epty.setText("你还没有好友");
             frd_epty.setOnClickListener(new View.OnClickListener() {
@@ -55,6 +55,12 @@ public class ActivityFriend extends AppCompatActivity {
             frd_epty.setVisibility(View.GONE);
             adapter = new OrderListAdapter(ActivityFriend.this, orderList);
             lv_friend.setAdapter(adapter);
+            lv_friend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                }
+            });
         }
 
         //Delete button
@@ -130,8 +136,18 @@ public class ActivityFriend extends AppCompatActivity {
         }else{
         orderList.clear();
         }
-        ordersDao.getAllDate();
+
         orderList.addAll(ordersDao.getAllDate());
         adapter.notifyDataSetChanged();
+    }
+    public void deleteData(final int position) {
+        AlertDialog.Builder builder_delete = new AlertDialog.Builder(ActivityFriend.this);
+        builder_delete.setTitle("删除").setMessage("确认要删除吗?").setPositiveButton("确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ordersDao.deleteOrder(position+"");
+                refreshOrderList();
+            }
+        });
     }
 }

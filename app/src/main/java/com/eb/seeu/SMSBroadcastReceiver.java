@@ -38,7 +38,7 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
             System.out.println("短信内容:"+content);
             System.out.println("短信时间:"+time);
 
-            mMessageListener.OnReceived(content);
+            mMessageListener.OnReceived(content,sender);
 
             //如果短信来自5556,不再往下传递
             if("5556".equals(sender)){
@@ -65,7 +65,7 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
         }
     }
     public interface MessageListener {
-        public void OnReceived(String message);
+        public void OnReceived(String message,String sender);
     }
     public void setOnReceivedMessageListener(MessageListener messageListener) {
         this.mMessageListener=messageListener;

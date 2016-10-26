@@ -19,7 +19,7 @@ public class OrderDao {
     private static final String TAG = "OrdersDao";
 
     // 列定义
-    private final String[] ORDER_COLUMNS = new String[] {"Num", "CustomName"};
+    private final String[] ORDER_COLUMNS = new String[] {"Num", "CustomName","Latitude","Longitude"};
 
     private Context context;
     private OrderDBHelper ordersDBHelper;
@@ -41,7 +41,7 @@ public class OrderDao {
         try {
             db = ordersDBHelper.getReadableDatabase();
             // select count(Id) from Orders
-            cursor = db.query(OrderDBHelper.TABLE_NAME, new String[]{"COUNT(Id)"}, null, null, null, null,null);
+            cursor = db.query(OrderDBHelper.TABLE_NAME, new String[]{"COUNT(Num)"}, null, null, null, null,null);
 
             if (cursor.moveToFirst()) {
                 count = cursor.getInt(0);
@@ -62,62 +62,7 @@ public class OrderDao {
         return false;
     }
 
-    /**
-     * 初始化数据
-     */
-  /*  public void initTable(){
-        SQLiteDatabase db = null;
 
-        try {
-            db = ordersDBHelper.getWritableDatabase();
-            db.beginTransaction();
-
-            db.execSQL("insert into " + OrderDBHelper.TABLE_NAME + " (Id, CustomName, OrderPrice, Country) values (1, 'Arc', 100, 'China')");
-            db.execSQL("insert into " + OrderDBHelper.TABLE_NAME + " (Id, CustomName, OrderPrice, Country) values (2, 'Bor', 200, 'USA')");
-            db.execSQL("insert into " + OrderDBHelper.TABLE_NAME + " (Id, CustomName, OrderPrice, Country) values (3, 'Cut', 500, 'Japan')");
-            db.execSQL("insert into " + OrderDBHelper.TABLE_NAME + " (Id, CustomName, OrderPrice, Country) values (4, 'Bor', 300, 'USA')");
-            db.execSQL("insert into " + OrderDBHelper.TABLE_NAME + " (Id, CustomName, OrderPrice, Country) values (5, 'Arc', 600, 'China')");
-            db.execSQL("insert into " + OrderDBHelper.TABLE_NAME + " (Id, CustomName, OrderPrice, Country) values (6, 'Doom', 200, 'China')");
-
-            db.setTransactionSuccessful();
-        }catch (Exception e){
-            Log.e(TAG, "", e);
-        }finally {
-            if (db != null) {
-                db.endTransaction();
-                db.close();
-            }
-        }
-    }
-*/
-    /**
-     * 执行自定义SQL语句
-     */
-/*    public void execSQL(String sql) {
-        SQLiteDatabase db = null;
-
-        try {
-            if (sql.contains("select")){
-                Toast.makeText(context, R.string.strUnableSql, Toast.LENGTH_SHORT).show();
-
-            }else if (sql.contains("insert") || sql.contains("update") || sql.contains("delete")){
-                db = ordersDBHelper.getWritableDatabase();
-                db.beginTransaction();
-                db.execSQL(sql);
-                db.setTransactionSuccessful();
-                Toast.makeText(context, R.string.strSuccessSql, Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            Toast.makeText(context, R.string.strErrorSql, Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "", e);
-        } finally {
-            if (db != null) {
-                db.endTransaction();
-                db.close();
-            }
-        }
-    }
-*/
     /**
      * 查询数据库中所有数据
      */
@@ -153,6 +98,7 @@ public class OrderDao {
         return null;
     }
 
+
     /**
      * 新增一条数据
      */
@@ -163,12 +109,15 @@ public class OrderDao {
             db = ordersDBHelper.getWritableDatabase();
             db.beginTransaction();
 
-            // insert into Orders(Id, CustomName, OrderPrice, Country) values (7, "Jne", 700, "China");
+
             ContentValues contentValues = new ContentValues();
+
+            // insert into Orders(Id, CustomName, OrderPrice, Country) values (7, "Jne", 700, "China");
+
+
             contentValues.put("Num", name);
-            contentValues.put("CustomName", "Jne");
-       //     contentValues.put("OrderPrice", 700);
-       //     contentValues.put("Country", "China");
+            contentValues.put("CustomName", "姓名");
+
             db.insertOrThrow(OrderDBHelper.TABLE_NAME, null, contentValues);
 
             db.setTransactionSuccessful();
@@ -189,7 +138,7 @@ public class OrderDao {
     /**
      * 删除一条数据  此处删除Id为7的数据
      */
-    public boolean deleteOrder() {
+    public boolean deleteOrder(String str) {
         SQLiteDatabase db = null;
 
         try {
@@ -197,7 +146,7 @@ public class OrderDao {
             db.beginTransaction();
 
             //delete from Orders where Id = 7
-            db.delete(OrderDBHelper.TABLE_NAME, "Num = ?", new String[]{String.valueOf(111)});
+            db.delete(OrderDBHelper.TABLE_NAME, "Num = ?", new String[]{String.valueOf(str)});
             db.setTransactionSuccessful();
             return true;
         } catch (Exception e) {
@@ -225,7 +174,7 @@ public class OrderDao {
             cv.put("OrderPrice", 800);
             db.update(OrderDBHelper.TABLE_NAME,
                     cv,
-                    "Id = ?",
+                    "Num = ?",
                     new String[]{String.valueOf(6)});
             db.setTransactionSuccessful();
             return true;
@@ -297,7 +246,7 @@ public class OrderDao {
             db = ordersDBHelper.getReadableDatabase();
             // select count(Id) from Orders where Country = 'China'
             cursor = db.query(OrderDBHelper.TABLE_NAME,
-                    new String[]{"COUNT(Id)"},
+                    new String[]{"COUNT(Num)"},
                     "Country = ?",
                     new String[] {"China"},
                     null, null, null);
@@ -331,7 +280,7 @@ public class OrderDao {
         try {
             db = ordersDBHelper.getReadableDatabase();
             // select Id, CustomName, Max(OrderPrice) as OrderPrice, Country from Orders
-            cursor = db.query(OrderDBHelper.TABLE_NAME, new String[]{"Id", "CustomName", "Max(OrderPrice) as OrderPrice", "Country"}, null, null, null, null, null);
+            cursor = db.query(OrderDBHelper.TABLE_NAME, new String[]{"Num", "CustomName"}, null, null, null, null, null);
 
             if (cursor.getCount() > 0){
                 if (cursor.moveToFirst()) {
