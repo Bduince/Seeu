@@ -2,6 +2,7 @@ package com.eb.seeu;
 
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -23,7 +24,7 @@ import java.util.List;
 
 
 public class ActivityFriend extends AppCompatActivity {
-
+    private final int requestCode = 1500;
     private ListView lv_friend;
     private ActionBar bar_frd;
     private OrderDao ordersDao;
@@ -58,7 +59,10 @@ public class ActivityFriend extends AppCompatActivity {
             lv_friend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                    Intent intent = new Intent();
+                    intent.setClass(ActivityFriend.this, ActivityInfo.class);
+                    startActivityForResult(intent,requestCode);
+                    startActivity(intent);
                 }
             });
         }
@@ -89,6 +93,7 @@ public class ActivityFriend extends AppCompatActivity {
             case R.id.menu_frd_add:
                 dialog_add();
                 return true;
+
             case R.id.menu_frd_edit:
 
                 MenuView.ItemView edit =(MenuView.ItemView)findViewById(R.id.menu_frd_edit);

@@ -1,40 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent" android:layout_height="fill_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorGray">
 
-    <RelativeLayout android:id="@+id/vgp_friend_detail_header"
-        android:background="@drawable/friends_list_header"
-        android:layout_width="fill_parent" android:layout_height="wrap_content"
-        android:paddingLeft="10px" android:paddingRight="10px"
-        android:paddingTop="8px">
 
-        <Button android:id="@+id/btn_friends_list"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:background="@drawable/button_friends_list_def"
-            android:layout_alignParentLeft="true" />
-
-        <ToggleButton android:id="@+id/btn_friends_list_edit"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:background="@drawable/button_friends_list_edit_def"
-            android:layout_alignParentRight="true" android:textOff=""
-            android:textOn="" />
-
-    </RelativeLayout>
 
     <RelativeLayout android:id="@+id/vgp_friend_detail" android:layout_width="fill_parent"
         android:layout_height="wrap_content" android:background="@drawable/friends_list_item_background"
         android:paddingTop="10px" android:paddingRight="10px"
-        android:paddingLeft="40px" android:layout_below="@id/vgp_friend_detail_header">
+        android:paddingLeft="40px" >
 
         <TextView android:id="@+id/txt_friend_name"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_alignParentLeft="true" android:textColor="#39b54a"
             android:paddingTop="3dp" android:paddingLeft="10dp" android:textSize="18dp" />
 
-        <Button android:id="@+id/btn_delete" android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:background="@drawable/button_list_delete_def"
-            android:layout_alignParentRight="true" />
+
 
     </RelativeLayout>
 

@@ -50,18 +50,13 @@ public class OrderListAdapter extends BaseAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.listview_friend, null);
 
             holder = new ViewHolder();
-            holder.icon = (ImageView)view.findViewById(R.id.friend_icon);
             holder.dateIdTextView = (TextView) view.findViewById(R.id.friend_name);
 
 
 
             view.setTag(holder);
         }
-        holder.icon.setImageResource(R.drawable.huaji);
         holder.dateIdTextView.setText(order.num);
-        holder.dateIdTextView.setTextColor(Color.BLACK);
-
-
 
         return view;
     }
@@ -72,7 +67,6 @@ public class OrderListAdapter extends BaseAdapter {
     }
 
     public static class ViewHolder{
-        public ImageView icon;
         public TextView dateIdTextView;
 
 

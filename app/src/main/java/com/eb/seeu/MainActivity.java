@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sweep = (ImageView)findViewById(R.id.imageview_sweep);
+                sweep.setVisibility(View.VISIBLE);
                 Animation anim = AnimationUtils.loadAnimation(MainActivity.this,R.anim.rotate_indefinitely);
                 LinearInterpolator lin = new LinearInterpolator();
                 anim.setInterpolator(lin);

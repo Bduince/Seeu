@@ -111,13 +111,10 @@ public class OrderDao {
 
 
             ContentValues contentValues = new ContentValues();
-
-            // insert into Orders(Id, CustomName, OrderPrice, Country) values (7, "Jne", 700, "China");
-
-
             contentValues.put("Num", name);
             contentValues.put("CustomName", "姓名");
-
+            contentValues.put("Latitude","20");
+            contentValues.put("Longitude","20");
             db.insertOrThrow(OrderDBHelper.TABLE_NAME, null, contentValues);
 
             db.setTransactionSuccessful();
@@ -280,7 +277,7 @@ public class OrderDao {
         try {
             db = ordersDBHelper.getReadableDatabase();
             // select Id, CustomName, Max(OrderPrice) as OrderPrice, Country from Orders
-            cursor = db.query(OrderDBHelper.TABLE_NAME, new String[]{"Num", "CustomName"}, null, null, null, null, null);
+            cursor = db.query(OrderDBHelper.TABLE_NAME, new String[]{"Num", "CustomName","Latitude","Longitude"}, null, null, null, null, null);
 
             if (cursor.getCount() > 0){
                 if (cursor.moveToFirst()) {
@@ -310,8 +307,9 @@ public class OrderDao {
         Order order = new Order();
         order.num = (cursor.getString(cursor.getColumnIndex("Num")));
         order.customName = (cursor.getString(cursor.getColumnIndex("CustomName")));
-    //    order.orderPrice = (cursor.getInt(cursor.getColumnIndex("OrderPrice")));
-    //    order.country = (cursor.getString(cursor.getColumnIndex("Country")));
+        order.latitude = (cursor.getString(cursor.getColumnIndex("Latitude")));
+        order.longitude = (cursor.getString(cursor.getColumnIndex("Longitude")));
+ ;
         return order;
     }
 }

@@ -57,16 +57,15 @@ public class DeleteAdapter extends BaseAdapter{
             //         convertView = inflater.inflate(R.layout.before_click_listview, null);
             //          view = inflater
             holder = new ViewHolder();
-            holder.icon = (ImageView)view.findViewById(R.id.friend_icon);
             holder.dateIdTextView = (TextView) view.findViewById(R.id.friend_name);
             holder.delete = (ImageButton) view.findViewById(R.id.friend_delete);
 
 
             view.setTag(holder);
         }
-        holder.icon.setImageResource(R.drawable.huaji);
+        holder.delete.setVisibility(View.VISIBLE);
         holder.dateIdTextView.setText(order.num);
-        holder.dateIdTextView.setTextColor(Color.BLACK);
+
         holder.delete.setImageResource(R.drawable.button_list_delete_def);
 //        holder.delete.setOnClickListener(myListener);
         holder.delete.setOnClickListener(new View.OnClickListener() {
@@ -124,7 +123,6 @@ public class DeleteAdapter extends BaseAdapter{
     }
 
     public static class ViewHolder{
-        public ImageView icon;
         public TextView dateIdTextView;
         public ImageButton delete;
     }

@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class OrderDBHelper extends SQLiteOpenHelper {
     private static final int DB_VERSION = 1;
-    private static final String DB_NAME = "Seeu.db";
-    public static final String TABLE_NAME = "Friends";
+    private static final String DB_NAME = "Database.db";
+    public static final String TABLE_NAME = "Friends_list";
 
     public OrderDBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -16,7 +16,7 @@ public class OrderDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String sql = "create table if not exists " + TABLE_NAME + " (Num text primary key, CustomName text)";
+        String sql = "create table if not exists " + TABLE_NAME + " (Num text primary key, CustomName text, Latitude text, Longitude text)";
         sqLiteDatabase.execSQL(sql);
     }
 
