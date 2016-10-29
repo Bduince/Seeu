@@ -61,6 +61,10 @@ public class ActivityFriend extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent();
                     intent.setClass(ActivityFriend.this, ActivityInfo.class);
+                    Bundle mBundle = new Bundle();
+                    intent.putExtra("position",position);
+                    mBundle.putInt("position",position);
+                    intent.putExtras(mBundle);
                     startActivityForResult(intent,requestCode);
                     startActivity(intent);
                 }
