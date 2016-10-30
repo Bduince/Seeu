@@ -1,11 +1,8 @@
 package com.eb.seeu;
 
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.MenuView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,8 +13,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivityInfo extends AppCompatActivity {
 
+public class ActivityInfoEnemy extends AppCompatActivity {
     private OrderDao orderDao;
     private List<Order> orderList;
     private TextView name;
@@ -25,45 +22,54 @@ public class ActivityInfo extends AppCompatActivity {
     private TextView num;
     private Intent intent;
     private Button toRadar;
-    private Button toEnemes;
+    private Button toFriends;
     private Button edit_name_done;
     private EditText name_edit;
     private int mPosition;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_info);
+        setContentView(R.layout.activity_info_enemy);
         orderDao = new OrderDao(this);
         orderList = new ArrayList<>();
-        orderList.addAll(orderDao.getAllDate());
+        orderList.addAll(orderDao.getAllDate_enemy());
         intent = this.getIntent();
         Bundle mBundle = intent.getExtras();
         mPosition = mBundle.getInt("position");
 
-        name = (TextView)findViewById(R.id.txt_friend_name);
-        name_edit=(EditText)findViewById(R.id.txt_friend_name_edit);
-        edit_name_done=(Button)findViewById(R.id.friend_edit_name_done);
-        num = (TextView) findViewById(R.id.txt_friend_number);
-        loc = (TextView)findViewById(R.id.txt_friend_long_lang);
+        name = (TextView)findViewById(R.id.txt_enemy_name);
+        name_edit=(EditText)findViewById(R.id.txt_enemy_name_edit);
+        edit_name_done=(Button)findViewById(R.id.enemy_edit_name_done);
+        num = (TextView) findViewById(R.id.txt_enemy_number);
+        loc = (TextView)findViewById(R.id.txt_enemy_long_lang);
         toRadar = (Button)findViewById(R.id.btn_radar);
-        toEnemes = (Button)findViewById(R.id.btn_enemies);
+        toFriends = (Button)findViewById(R.id.btn_friends);
 
-        toEnemes.setOnClickListener(new View.OnClickListener() {
+    }
+    @Override
+    protected void onStart(){
+        super.onStart();
+        toFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent();
-                i.setClass(ActivityInfo.this,ActivityEnemy.class);
+                i.setClass(ActivityInfoEnemy.this,ActivityEnemy.class);
                 startActivity(i);
             }
         });
-        name.setText(orderList.get(mPosition).customName);
-        num.setText(orderList.get(mPosition).num);
-        loc.setText(orderList.get(mPosition).latitude+" / "+orderList.get(mPosition).longitude);
+        toRadar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent();
+                i.setClass(ActivityInfoEnemy.this,MainActivity.class);
+                startActivity(i);
+            }
+        });
         edit_name_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                orderDao.updateOrder(name_edit.getText().toString(),orderList.get(mPosition).num);
+                orderDao.updateOrder_enemy(name_edit.getText().toString(),orderList.get(mPosition).num);
 
                 name_edit.setVisibility(View.GONE);
                 name.setVisibility(View.VISIBLE);
@@ -71,19 +77,6 @@ public class ActivityInfo extends AppCompatActivity {
                 name.setText(name_edit.getText().toString());
             }
         });
-        toRadar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent();
-                i.setClass(ActivityInfo.this,MainActivity.class);
-                startActivity(i);
-            }
-        });
-
-    }
-    @Override
-    protected void onStart(){
-        super.onStart();
         name.setText(orderList.get(mPosition).customName);
         num.setText(orderList.get(mPosition).num);
         loc.setText(orderList.get(mPosition).latitude+" / "+orderList.get(mPosition).longitude);
@@ -91,15 +84,14 @@ public class ActivityInfo extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.menu_friend_info, menu);
+        getMenuInflater().inflate(R.menu.menu_enemy_info, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
         switch (id){
-            case R.id.menu_frd_info_edit:
+            case R.id.menu_enemy_info_edit:
                 name.setVisibility(View.GONE);
                 name_edit.setVisibility(View.VISIBLE);
                 name_edit.setText(orderList.get(mPosition).customName);

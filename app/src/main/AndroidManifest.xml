@@ -65,6 +65,8 @@
         </activity>
         <activity android:name=".ActivityInfo"/>
         <activity android:name=".ActivityFriend"/>
+        <activity android:name=".ActivityEnemy"/>
+        <activity android:name=".ActivityInfoEnemy"/>
     </application>
 
 </manifest>

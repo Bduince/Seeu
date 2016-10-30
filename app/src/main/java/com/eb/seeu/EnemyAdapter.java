@@ -1,22 +1,20 @@
 package com.eb.seeu;
 
+
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
-
-public class OrderListAdapter extends BaseAdapter {
+public class EnemyAdapter extends BaseAdapter {
     private Context context;
     private List<Order> orderList;
 
-    public OrderListAdapter(Context context, List<Order> orderList) {
+    public EnemyAdapter(Context context, List<Order> orderList) {
         this.context = context;
         this.orderList = orderList;
     }
@@ -35,7 +33,6 @@ public class OrderListAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return position;
     }
-
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
         Order order = orderList.get(position);
@@ -47,9 +44,9 @@ public class OrderListAdapter extends BaseAdapter {
         if (view != null){
             holder = (ViewHolder) view.getTag();
         }else {
-            view = LayoutInflater.from(context).inflate(R.layout.listview_friend, null);
+            view = LayoutInflater.from(context).inflate(R.layout.listview_enemy, null);
             holder = new ViewHolder();
-            holder.dateIdTextView = (TextView) view.findViewById(R.id.friend_name);
+            holder.dateIdTextView = (TextView) view.findViewById(R.id.enemy_name);
 
 
 

@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private LocationService locService;
     private LinkedList<LocationEntity> locationList = new LinkedList<LocationEntity>();
     private Button btn_friend;
+    private Button btn_enemy;
     private Button btn_refresh;
 
     private SMSBroadcastReceiver mSMSBroadcastReceiver;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView sweep;
     private OrderDao orderdao;
     private List<Order> orderList;
+    private List<Order> orderList_enemy;
     private double mLatitude;
     private double mLontitude;
     @Override
@@ -59,8 +61,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         orderList = new ArrayList<>();
+        orderList_enemy = new ArrayList<>();
         orderdao = new OrderDao(this);
         orderList = orderdao.getAllDate();
+        orderList_enemy = orderdao.getAllDate_enemy();
         mSMSBroadcastReceiver=new SMSBroadcastReceiver();
 
         mMapView = (MapView) findViewById(R.id.main_bmapView);
@@ -80,6 +84,14 @@ public class MainActivity extends AppCompatActivity {
         mClient.registerLocationListener(listener);
         mClient.start();
         //friend button
+        btn_enemy = (Button)findViewById(R.id.btn_enemies);
+        btn_enemy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent toEnemy = new Intent(MainActivity.this, ActivityEnemy.class);
+                startActivity(toEnemy);
+            }
+        });
         btn_friend = (Button) findViewById(R.id.main_friend);
         btn_friend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +116,17 @@ public class MainActivity extends AppCompatActivity {
                 if(orderList.size()>0){
                     for(int i=0;i<orderList.size();++i){
                         String phone_num =  orderList.get(i).num;
+                        String context = "Where are you";
+                        SmsManager manager = SmsManager.getDefault();
+                        ArrayList<String> list = manager.divideMessage(context);  //因为一条短信有字数限制，因此要将长短信拆分
+                        for(String text:list){
+                            manager.sendTextMessage(phone_num, null, text, null, null);
+                        }
+                    }
+                }
+                if(orderList_enemy.size()>0){
+                    for(int i=0;i<orderList_enemy.size();++i){
+                        String phone_num =  orderList_enemy.get(i).num;
                         String context = "Where are you";
                         SmsManager manager = SmsManager.getDefault();
                         ArrayList<String> list = manager.divideMessage(context);  //因为一条短信有字数限制，因此要将长短信拆分
@@ -170,6 +193,21 @@ public class MainActivity extends AppCompatActivity {
             LatLng flag = new LatLng(latitude, longitude);
             BitmapDescriptor bitmap = null;
             bitmap = BitmapDescriptorFactory.fromResource(R.drawable.friend_marker);
+            // 构建MarkerOption，用于在地图上添加Marker
+            OverlayOptions option = new MarkerOptions().position(flag).icon(bitmap);
+            // 在地图上添加Marker，并显示
+            mBaiduMap.addOverlay(option);
+        }
+    }
+    public void setFlag_enemy(String[] array){
+        if(array.length==2) {
+            double latitude;
+            double longitude;
+            latitude = Double.parseDouble(array[0]);
+            longitude = Double.parseDouble(array[1]);
+            LatLng flag = new LatLng(latitude, longitude);
+            BitmapDescriptor bitmap = null;
+            bitmap = BitmapDescriptorFactory.fromResource(R.drawable.enemy_marker);
             // 构建MarkerOption，用于在地图上添加Marker
             OverlayOptions option = new MarkerOptions().position(flag).icon(bitmap);
             // 在地图上添加Marker，并显示

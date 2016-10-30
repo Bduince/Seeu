@@ -1,30 +1,29 @@
 package com.eb.seeu;
 
-import android.content.DialogInterface;
-import android.os.Bundle;
-
 import android.content.Context;
-import android.graphics.Color;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.support.v7.app.AlertDialog;
 
 import java.util.ArrayList;
 import java.util.List;
-public class DeleteAdapter extends BaseAdapter{
+
+/**
+ * Created by PC on 2016/10/30.
+ */
+public class DeleteEnemyAdapter extends BaseAdapter {
     private Context context;
     private List<Order> orderList;
 
-    public DeleteAdapter(Context context, List<Order> orderList) {
+    public DeleteEnemyAdapter(Context context, List<Order> orderList) {
         this.context = context;
         this.orderList = orderList;
     }
-
     @Override
     public int getCount() {
         return orderList.size();
@@ -53,12 +52,12 @@ public class DeleteAdapter extends BaseAdapter{
             holder = (ViewHolder) view.getTag();
             myListener=new MyListener(position);
         }else {
-            view = LayoutInflater.from(context).inflate(R.layout.listview_friend, null);
+            view = LayoutInflater.from(context).inflate(R.layout.listview_enemy, null);
             //         convertView = inflater.inflate(R.layout.before_click_listview, null);
             //          view = inflater
             holder = new ViewHolder();
-            holder.dateIdTextView = (TextView) view.findViewById(R.id.friend_name);
-            holder.delete = (ImageButton) view.findViewById(R.id.friend_delete);
+            holder.dateIdTextView = (TextView) view.findViewById(R.id.enemy_name);
+            holder.delete = (ImageButton) view.findViewById(R.id.enemy_delete);
 
 
             view.setTag(holder);
@@ -95,26 +94,26 @@ public class DeleteAdapter extends BaseAdapter{
     }
 
     private class MyListener implements View.OnClickListener {
-	        int mPosition;
-	        public MyListener(int inPosition){
-	            mPosition= inPosition;
-	        }
-	        @Override
-	        public void onClick(View v) {
-	            // TODO Auto-generated method stub
-                new AlertDialog.Builder(context).setTitle("提示").setMessage("确认要删除吗?")
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                OrderDao orderDao = new OrderDao(context);
+        int mPosition;
+        public MyListener(int inPosition){
+            mPosition= inPosition;
+        }
+        @Override
+        public void onClick(View v) {
+            // TODO Auto-generated method stub
+            new AlertDialog.Builder(context).setTitle("提示").setMessage("确认要删除吗?")
+                    .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            OrderDao orderDao = new OrderDao(context);
 
-                               orderDao.deleteOrder_enemy(orderDao.getAllDate().get(mPosition).num);
-                            }
-                        }).setNegativeButton("取消",null).show();
+                            orderDao.deleteOrder(orderDao.getAllDate().get(mPosition).num);
+                        }
+                    }).setNegativeButton("取消",null).show();
 
-	        }
+        }
 
-	    }
+    }
 
 
     @Override

@@ -1,38 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:background="@color/colorGray"
-    android:layout_height="match_parent">
+    android:layout_width="fill_parent" android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@color/colorGray">
+
 
     <TextView
-        android:id="@+id/friend_empty"
+        android:id="@+id/enemy_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:textAlignment="center"
         android:gravity="center_vertical"
         android:textColor="#ffffff"/>
+    <ListView android:id="@+id/lvw_enemies_list"
+        android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:layout_weight="1" />
 
-    <ListView
-        android:id="@+id/friend_listview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-    </ListView>
-    <RelativeLayout android:id="@+id/vgp_friends_list_footer"
+    <RelativeLayout android:id="@+id/vgp_enemies_list_footer"
         android:layout_width="fill_parent" android:layout_height="wrap_content"
         android:background="@drawable/list_footer" android:padding="5px">
 
-        <Button android:id="@+id/btn_friends_list_radar"
+        <Button android:id="@+id/btn_enemies_list_radar"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:background="@drawable/button_radar_def"
             android:layout_alignParentLeft="true" />
 
-        <Button android:id="@+id/btn_friends_list_enemies"
+        <Button android:id="@+id/btn_enemies_list_friends"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:background="@drawable/button_enemies_def"
+            android:background="@drawable/button_friends_def"
             android:layout_alignParentRight="true" />
 
     </RelativeLayout>
+
 </LinearLayout>

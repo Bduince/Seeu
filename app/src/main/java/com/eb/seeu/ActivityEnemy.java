@@ -1,6 +1,5 @@
 package com.eb.seeu;
 
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,47 +22,50 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by PC on 2016/10/30.
+ */
+public class ActivityEnemy extends AppCompatActivity {
 
-public class ActivityFriend extends AppCompatActivity {
     private final int requestCode = 1500;
-    private ListView lv_friend;
+    private ListView lv_enemy;
     private OrderDao ordersDao;
     private List<Order> orderList;
-    private OrderListAdapter adapter;
-    private DeleteAdapter d_adapter;
+    private EnemyAdapter adapter;
+    private DeleteEnemyAdapter d_adapter;
     private Button toRadar;
-    private Button toEnemy;
+    private Button toFriend;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friend);
-        //SQLite intit
+        setContentView(R.layout.activity_enemy);
+
         ordersDao = new OrderDao(this);
         orderList = new ArrayList<>();
-        orderList = ordersDao.getAllDate();
-        lv_friend = (ListView)findViewById(R.id.friend_listview);
-        TextView frd_epty = (TextView)findViewById(R.id.friend_empty);
-        d_adapter = new DeleteAdapter(ActivityFriend.this, orderList);
-        toRadar = (Button)findViewById(R.id.btn_friends_list_radar);
-        toEnemy = (Button)findViewById(R.id.btn_friends_list_enemies);
+        orderList = ordersDao.getAllDate_enemy();
+        lv_enemy = (ListView)findViewById(R.id.lvw_enemies_list);
+        TextView enemy_epty = (TextView)findViewById(R.id.enemy_empty);
+        d_adapter = new DeleteEnemyAdapter(ActivityEnemy.this, orderList);
+        toRadar = (Button)findViewById(R.id.btn_enemies_list_radar);
+        toFriend = (Button)findViewById(R.id.btn_enemies_list_friends);
 
         if(orderList == null) {
-            frd_epty.setText("你还没有好友");
-            frd_epty.setOnClickListener(new View.OnClickListener() {
+            enemy_epty.setText("你还没有敌人");
+            enemy_epty.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     dialog_add();
                 }
             });
         }else{
-            frd_epty.setVisibility(View.GONE);
-            adapter = new OrderListAdapter(ActivityFriend.this, orderList);
-            lv_friend.setAdapter(adapter);
-            lv_friend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            enemy_epty.setVisibility(View.GONE);
+            adapter = new EnemyAdapter(ActivityEnemy.this, orderList);
+            lv_enemy.setAdapter(adapter);
+            lv_enemy.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent();
-                    intent.setClass(ActivityFriend.this, ActivityInfo.class);
+                    intent.setClass(ActivityEnemy.this, ActivityInfoEnemy.class);
                     Bundle mBundle = new Bundle();
                     intent.putExtra("position",position);
                     mBundle.putInt("position",position);
@@ -73,21 +75,20 @@ public class ActivityFriend extends AppCompatActivity {
                 }
             });
         }
-
-      toRadar.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              Intent i = new Intent();
-              i.setClass(ActivityFriend.this,MainActivity.class);
-              startActivity(i);
-          }
-      });
-
-        toEnemy.setOnClickListener(new View.OnClickListener() {
+        toRadar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent();
-                i.setClass(ActivityFriend.this,ActivityEnemy.class);
+                i.setClass(ActivityEnemy.this,MainActivity.class);
+                startActivity(i);
+            }
+        });
+
+        toFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent();
+                i.setClass(ActivityEnemy.this,ActivityFriend.class);
                 startActivity(i);
             }
         });
@@ -96,7 +97,8 @@ public class ActivityFriend extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.menu_friend, menu);
+        getMenuInflater().inflate(R.menu.menu_enemy, menu);
+
         return true;
     }
 
@@ -104,20 +106,17 @@ public class ActivityFriend extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
         switch (id){
-            case R.id.menu_frd_add:
+            case R.id.menu_enemy_add:
                 dialog_add();
                 return true;
 
-            case R.id.menu_frd_edit:
+            case R.id.menu_enemy_edit:
 
-                MenuView.ItemView edit =(MenuView.ItemView)findViewById(R.id.menu_frd_edit);
-
-
-                if(lv_friend.getAdapter().equals(adapter)) {
-                    lv_friend.setAdapter(d_adapter);
+                if(lv_enemy.getAdapter().equals(adapter)) {
+                    lv_enemy.setAdapter(d_adapter);
                 }else{
-                    if(lv_friend.getAdapter().equals(d_adapter)){
-                        lv_friend.setAdapter(adapter);
+                    if(lv_enemy.getAdapter().equals(d_adapter)){
+                        lv_enemy.setAdapter(adapter);
                     }
                 }
 
@@ -133,14 +132,14 @@ public class ActivityFriend extends AppCompatActivity {
         final View layout = inflater.inflate(R.layout.dialog_add_frd,(ViewGroup) findViewById(R.id.dialog));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(("添加好友"));
+        builder.setTitle(("添加敌人"));
         builder.setView(layout);
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                 EditText edit = (EditText) layout.findViewById(R.id.dlog_add_edit);
+                EditText edit = (EditText) layout.findViewById(R.id.dlog_add_edit);
                 //插入数据库
-                ordersDao.insertDate(edit.getText().toString());
+                ordersDao.insertDate_enemy(edit.getText().toString());
                 refreshOrderList();
             }
         });
@@ -148,16 +147,14 @@ public class ActivityFriend extends AppCompatActivity {
         builder.create().show();
     }
     private void refreshOrderList(){
-        // 注意：千万不要直接赋值，如：orderList = ordersDao.getAllDate() 此时相当于重新分配了一个内存 原先的内存没改变 所以界面不会有变化
-        // Java中的类是地址传递 基本数据才是值传递
+
         if(orderList==null) {
             orderList = new ArrayList<>();
         }else{
-        orderList.clear();
+            orderList.clear();
         }
 
-        orderList.addAll(ordersDao.getAllDate());
+        orderList.addAll(ordersDao.getAllDate_enemy());
         adapter.notifyDataSetChanged();
     }
-
 }
