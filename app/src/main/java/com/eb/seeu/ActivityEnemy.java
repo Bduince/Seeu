@@ -156,5 +156,6 @@ public class ActivityEnemy extends AppCompatActivity {
 
         orderList.addAll(ordersDao.getAllDate_enemy());
         adapter.notifyDataSetChanged();
+        d_adapter.notifyDataSetChanged();
     }
 }

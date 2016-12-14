@@ -12,7 +12,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -116,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 if(orderList.size()>0){
                     for(int i=0;i<orderList.size();++i){
                         String phone_num =  orderList.get(i).num;
-                        String context = "Where are you";
+                        String context = "f Where are you";
                         SmsManager manager = SmsManager.getDefault();
                         ArrayList<String> list = manager.divideMessage(context);  //因为一条短信有字数限制，因此要将长短信拆分
                         for(String text:list){
@@ -127,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 if(orderList_enemy.size()>0){
                     for(int i=0;i<orderList_enemy.size();++i){
                         String phone_num =  orderList_enemy.get(i).num;
-                        String context = "Where are you";
+                        String context = "e Where are you";
                         SmsManager manager = SmsManager.getDefault();
                         ArrayList<String> list = manager.divideMessage(context);  //因为一条短信有字数限制，因此要将长短信拆分
                         for(String text:list){
@@ -135,18 +134,17 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-                sweep.clearAnimation();
+
+                sweep.setVisibility(View.GONE);
             }
         });
         mSMSBroadcastReceiver.setOnReceivedMessageListener(new SMSBroadcastReceiver.MessageListener() {
             @Override
             public void OnReceived(String message,String sender) {
-
-
-                if("Where are you".equals(message)) {
+                if("f Where are you".equals(message)) {
                     if(mLatitude!=0&&mLontitude!=0){
                         String phone_num = sender;
-                        String context = mLatitude+"/"+mLontitude;
+                        String context = "f/"+mLatitude+"/"+mLontitude;
                         SmsManager manager = SmsManager.getDefault();
                         ArrayList<String> list = manager.divideMessage(context);  //因为一条短信有字数限制，因此要将长短信拆分
                         for (String text : list) {
@@ -154,7 +152,18 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
 
-                }else if(message.indexOf("/")!=-1){
+                }else if("e Where are you".equals(message)){
+                    if(mLatitude!=0&&mLontitude!=0){
+                        String phone_num = sender;
+                        String context = "e/"+mLatitude+"/"+mLontitude;
+                        SmsManager manager = SmsManager.getDefault();
+                        ArrayList<String> list = manager.divideMessage(context);  //因为一条短信有字数限制，因此要将长短信拆分
+                        for (String text : list) {
+                            manager.sendTextMessage(phone_num, null, text, null, null);
+                        }
+                    }
+                }
+                else if(message.indexOf("/")!=-1){
                     //分割经纬度
                     array = message.split("/");
                     setFlag(array);
@@ -185,35 +194,28 @@ public class MainActivity extends AppCompatActivity {
         }
     };
     public void setFlag(String[] array){
-        if(array.length==2) {
+        if(array.length==3) {
+            String frdorenm;
             double latitude;
             double longitude;
-            latitude = Double.parseDouble(array[0]);
-            longitude = Double.parseDouble(array[1]);
+            frdorenm = array[0];
+            latitude = Double.parseDouble(array[1]);
+            longitude = Double.parseDouble(array[2]);
             LatLng flag = new LatLng(latitude, longitude);
             BitmapDescriptor bitmap = null;
-            bitmap = BitmapDescriptorFactory.fromResource(R.drawable.friend_marker);
+            if("f".equals(frdorenm)){
+                bitmap = BitmapDescriptorFactory.fromResource(R.drawable.friend_marker);
+            }else{
+                bitmap = BitmapDescriptorFactory.fromResource(R.drawable.enemy_marker);
+            }
+
             // 构建MarkerOption，用于在地图上添加Marker
             OverlayOptions option = new MarkerOptions().position(flag).icon(bitmap);
             // 在地图上添加Marker，并显示
             mBaiduMap.addOverlay(option);
         }
     }
-    public void setFlag_enemy(String[] array){
-        if(array.length==2) {
-            double latitude;
-            double longitude;
-            latitude = Double.parseDouble(array[0]);
-            longitude = Double.parseDouble(array[1]);
-            LatLng flag = new LatLng(latitude, longitude);
-            BitmapDescriptor bitmap = null;
-            bitmap = BitmapDescriptorFactory.fromResource(R.drawable.enemy_marker);
-            // 构建MarkerOption，用于在地图上添加Marker
-            OverlayOptions option = new MarkerOptions().position(flag).icon(bitmap);
-            // 在地图上添加Marker，并显示
-            mBaiduMap.addOverlay(option);
-        }
-    }
+
 
     private Bundle Algorithm(BDLocation location) {
         Bundle locData = new Bundle();
@@ -287,8 +289,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         // 在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
-//		WriteLog.getInstance().close();
-//        locService.unregisterListener(listener);
         locService.stop();
         mMapView.onDestroy();
     }

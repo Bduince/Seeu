@@ -107,7 +107,7 @@ public class DeleteEnemyAdapter extends BaseAdapter {
                         public void onClick(DialogInterface dialog, int which) {
                             OrderDao orderDao = new OrderDao(context);
 
-                            orderDao.deleteOrder(orderDao.getAllDate().get(mPosition).num);
+                            orderDao.deleteOrder_enemy(orderDao.getAllDate().get(mPosition).num);
                         }
                     }).setNegativeButton("取消",null).show();
 
